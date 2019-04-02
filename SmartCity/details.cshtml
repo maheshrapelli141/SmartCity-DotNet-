@@ -1,0 +1,83 @@
+﻿@{
+    var db = Database.Open("SmartCity");
+    var query = "SELECT * FROM Place WHERE ID LIKE " + Request.Params["place"];
+    var type = "";
+    var curr = 0;
+}
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SmartCity</title>
+        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter:400,700">
+        <link rel="stylesheet" href="assets/css/Footer-Basic.css">
+        <link rel="stylesheet" href="assets/css/Header-Dark.css">
+        <link rel="stylesheet" href="assets/css/Highlight-Clean.css">
+        <link rel="stylesheet" href="assets/css/Navigation-Clean.css">
+        <link rel="stylesheet" href="assets/css/styles.css">
+    </head>
+
+    <body>
+        @RenderPage("header.cshtml");
+        <div>
+            <div class="container" style="padding:20px 10px">
+                @{
+                    foreach (var row in db.Query(query))
+                    {
+                        type = row.category_id;
+                        curr = row.ID;
+                        <div class="row">
+                            <div class="col-md-6"><img src="@row.image" width="100%" height="auto"></div>
+                            <div class="col-md-6">
+                                <h2>@row.name</h2><strong>Open Time : @row.open_time</strong><strong>Close Time : @row.close_time</strong>
+                                <p style="margin:12px 0px;"><strong>Address :&nbsp;</strong>@row.address</p>
+                                <p style="margin:12px 0px;"><strong>Description :</strong>@row.description</p>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div>
+
+            <div class="container">
+                <div class="row">
+                    @{ 
+                        var similarTypeQuery = "SELECT TOP 4 * FROM Place WHERE category_id LIKE "+type+" AND ID NOT LIKE "+curr;
+                        foreach (var similar in db.Query(similarTypeQuery))
+                        {
+                            <div class="col-md-3" style="padding:5px;">
+                                <img src="@similar.image" style="width:100%;height:auto;">
+                                <h3>@similar.name</h3>
+                                <hr>
+                                <p>@similar.address</p>
+                            </div>
+
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="footer-basic">
+            <hr>
+            <footer>
+                <div class="social"><a href="#"><i class="icon ion-social-instagram"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-facebook"></i></a></div>
+                <ul class="list-inline">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+                <p class="copyright">SmartCity © 2016</p>
+            </footer>
+        </div>
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    </body>
+
+</html>

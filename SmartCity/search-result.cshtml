@@ -1,0 +1,90 @@
+﻿@{ 
+    var db = Database.Open("SmartCity");
+    var places = "";
+    if (Request.Params["category"] != null && Request.Params["city"] != null)
+    {
+        places = "SELECT * FROM Place WHERE category_id LIKE " + Request.Params["category"] + " AND city_id LIKE " + Request.Params["city"];
+    }
+    else
+    {
+        places = "SELECT * FROM Place WHERE category_id LIKE " + Request.Params["category"];
+    }
+    
+
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCity</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter:400,700">
+    <link rel="stylesheet" href="assets/css/Footer-Basic.css">
+    <link rel="stylesheet" href="assets/css/Header-Dark.css">
+    <link rel="stylesheet" href="assets/css/Highlight-Clean.css">
+    <link rel="stylesheet" href="assets/css/Navigation-Clean.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        .box{
+            color:black;
+        }
+    </style>
+</head>
+
+<body>
+    @RenderPage("header.cshtml");
+    @{
+        var result = db.Query(places);
+        if (result != null)
+        {
+            foreach (var row in result)
+            {
+                <a href="~/details.cshtml?place=@row.ID" class="box">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12" style="padding:20px;">
+                                <h3>@row.name</h3>
+                                <p>@row.address</p>
+                                <strong>Open Time : @row.open_time</strong>
+                                <strong style="margin:12px;">Close Time : @row.close_time</strong>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            }
+        }
+        else
+        {
+            <div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12" style="padding:20px;">
+                            <h3>No Data Exists</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    <div class="footer-basic">
+        <hr>
+        <footer>
+            <div class="social"><a href="#"><i class="icon ion-social-instagram"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-facebook"></i></a></div>
+            <ul class="list-inline">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Terms</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+            </ul>
+            <p class="copyright">SmartCity © 2016</p>
+        </footer>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>

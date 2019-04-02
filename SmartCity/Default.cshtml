@@ -1,0 +1,123 @@
+﻿@{ 
+    var db = Database.Open("SmartCity");
+    var stateQuery = "SELECT * FROM State";
+    var cityQuery = "SELECT * FROM City";
+    var selected = "";
+    var option = 0;
+    if (Request.Params["option"]!=null)
+    {
+        option = Convert.ToInt32(Request.Params["option"]);
+        cityQuery = "SELECT * FROM City WHERE state_id = " + option;
+    }
+
+    var catQuery = "SELECT * FROM Category";
+}
+ 
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCity</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter:400,700">
+    <link rel="stylesheet" href="assets/css/Footer-Basic.css">
+    <link rel="stylesheet" href="assets/css/Header-Dark.css">
+    <link rel="stylesheet" href="assets/css/Highlight-Clean.css">
+    <link rel="stylesheet" href="assets/css/Navigation-Clean.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    @RenderPage("header.cshtml");
+    <div class="highlight-clean" style="background-image:url(&quot;assets/img/mountain_bg.jpg&quot;);height:500px;padding:170px 0px;">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center" style="color:rgb(255,255,255);">Search</h2>
+            </div>
+            <form action="~/search-result.cshtml" method="get">
+                <div class="buttons">
+                    <select style="width:134px;height:45px;" id="selectState" name="state" onchange="onStateChange()">
+                        <optgroup label="Select State">
+                            @foreach (var row in db.Query(stateQuery))
+                            {
+                                if (Request.Params["option"] != null)
+                                {
+                                    if (option == row.ID)
+                                    {
+                                        selected = "selected";
+                                    }
+                                    else
+                                    {
+                                        selected = "";
+                                    }
+                                }
+                            <option value="@row.ID" @selected>@row.State</option>
+                            }
+                        </optgroup>
+                        </select>
+                    <select style="height:45px;" name="city">
+                        <optgroup label="Select City">
+                            @foreach (var row in db.Query(cityQuery))
+                            {
+                                <option value="@row.ID">@row.City</option>
+                            }
+                        </optgroup>
+                    </select>
+                    <select style="height:45px;" name="category">
+                        <optgroup label="Select Category">
+                            @foreach (var row in db.Query(catQuery))
+                            {
+                                <option value="@row.ID">@row.Category</option>
+                            }
+                        </optgroup>
+                    </select>
+                    <input class="btn btn-default btn-sm" type="submit" value="Search">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6"><img src="assets/img/travel-tourism-industry.png"></div>
+                <div class="col-md-6">
+                    <p class="text-justify" style="font-size:16px;">
+                        <br><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Tourism&nbsp;in Mumbai</strong>&nbsp;is an industry that attracts almost 6 million tourists per year, making it the 30th-most visited location worldwide.The world&nbsp;travel and tourism
+                        council&nbsp;calculated that tourism generated US$3.9 billion or 3.2% of the city's GDP in 2016 and supported&nbsp;637,900 jobs, 7.3% of its total employment.The sector is predicted to grow at an average annual rate of 8.8% to
+                        US$9 billion by 2026 (3.1% of GDP). Mumbai's tourism industry accounted for 5.4% of India's total travel and tourism-related GDP in 2016, and employed 2.4% of the country's total workforce.With a metro population of approximately
+                        20 million, Mumbai&nbsp;is the largest city in India and the 10th <a href="https://en.wikipedia.org/wiki/List_of_largest_cities">l</a>argest city in the world. Clockwise from top: Cuffe Parade skyline, Taj Mahal Palace Hotel, Chhatrapati
+                        Shivaji Terminus, Bandra–Worli Sea Link, and the Gateway of India.Mumbai offers natural heritage and modern entertainment including leisure spots, beaches, cinemas, studios, holy places, amusement parks and historical monuments.
+                        Transport options include air, road, train and ship.<br><br><br>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-basic">
+        <hr>
+        <footer>
+            <div class="social"><a href="#"><i class="icon ion-social-instagram"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-facebook"></i></a></div>
+            <ul class="list-inline">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Terms</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+            </ul>
+            <p class="copyright">SmartCity © 2016</p>
+        </footer>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        function onStateChange() {
+            var option = document.getElementById('selectState').value;
+            window.location.href = "/Default.cshtml?option=" + option;
+        }
+    </script>
+</body>
+
+</html>
