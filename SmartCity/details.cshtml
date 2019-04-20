@@ -43,18 +43,22 @@
             </div>
         </div>
         <div>
-
+            <br /><br /><br />
+            
             <div class="container">
+                <h3>Similar results : </h3><hr />
                 <div class="row">
-                    @{ 
-                        var similarTypeQuery = "SELECT TOP 4 * FROM Place WHERE category_id LIKE "+type+" AND ID NOT LIKE "+curr;
+                    @{
+                        var similarTypeQuery = "SELECT TOP 4 * FROM Place WHERE category_id LIKE " + type + " AND ID NOT LIKE " + curr;
                         foreach (var similar in db.Query(similarTypeQuery))
                         {
                             <div class="col-md-3" style="padding:5px;">
-                                <img src="@similar.image" style="width:100%;height:auto;">
-                                <h3>@similar.name</h3>
-                                <hr>
-                                <p>@similar.address</p>
+                                <a href="~/details.cshtml?place=@similar.ID" style="color:black;text-decoration:none;">
+                                    <img src="@similar.image" style="width:100%;height:auto;">
+                                    <h3>@similar.name</h3>
+                                    <hr>
+                                    <p>@similar.address</p>
+                                </a>
                             </div>
 
                         }
@@ -62,22 +66,7 @@
                 </div>
             </div>
         </div>
-        <div class="footer-basic">
-            <hr>
-            <footer>
-                <div class="social"><a href="#"><i class="icon ion-social-instagram"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-facebook"></i></a></div>
-                <ul class="list-inline">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Terms</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul>
-                <p class="copyright">SmartCity © 2016</p>
-            </footer>
-        </div>
-        <script src="assets/js/jquery.min.js"></script>
-        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        @RenderPage("footer.cshtml");
     </body>
 
 </html>
